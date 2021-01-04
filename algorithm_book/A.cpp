@@ -12,46 +12,34 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-ll K;
-int ans = 0;
-map<ll, vector<bool>>mp;
-
-void func(ll n) {
-    if(10*n + 3 <= K){
-        mp[10*n + 3] = {true, mp[n][1], mp[n][2]};
-        if(mp[10*n + 3][0] && mp[10*n + 3][1] && mp[10*n + 3][2]){
-            ans++;
-        }
-        func(10*n+3);
-    }
-    if(10*n + 5 <= K){
-        mp[10*n + 5] = {mp[n][0], true, mp[n][2]};
-        if(mp[10*n + 5][0] && mp[10*n + 5][1] && mp[10*n + 5][2]){
-            ans++;
-        }
-        func(10*n+5);
-    }
-    if(10*n + 7 <= K){
-        mp[10*n + 7] = {mp[n][0], mp[n][1], true};
-        if(mp[10*n + 7][0] && mp[10*n + 7][1] && mp[10*n + 7][2]){
-            ans++;
-        }
-        func(10*n+7);
-    }
-    else{
-        return;
-    }
-}
 
 void solve() {
-    cin >> K;
-    mp[3] = {true, false, false};
-    func(3);
-    mp[5] = {false, true, false};
-    func(5);
-    mp[7] = {false, false, true};
-    func(7);
-    cout << ans << endl;
+    int n, w;
+    cin >> n >> w;
+    vector<int>a(n);
+    for(int i=0;i<n;i++){
+        cin >> a[i];
+    }
+    vector<vector<bool>>dp(n+1, vector<bool>(w+1, false));
+    for(int i=0;i<n+1;i++){
+        dp[i][0] = true;
+    }
+    for(int i=0;i<n;i++){
+        for(int j=0;j<w+1;j++){
+            if(j-a[i] >= 0 && dp[i][j-a[i]]){
+                dp[i+1][j] = true;
+            }
+            if(dp[i][j]){
+                dp[i+1][j] = true;
+            }
+        }
+    }
+    if(dp[n][w]){
+        cout << "Yes" << endl;
+    }
+    else{
+        cout << "No" << endl;
+    }
 }
 
 int main() {
