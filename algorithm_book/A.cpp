@@ -21,12 +21,9 @@ void solve() {
         b[i] = a[i];
     }
     sort(a.begin(),a.end());
-    map<int,int>mp;
     for(int i=0;i<n;i++){
-        mp[a[i]] = i;
-    }
-    for(int i=0;i<n;i++){
-        cout << mp[b[i]] << endl;
+        auto ans = lower_bound(a.begin(), a.end(), b[i]);
+        cout << ans-b.begin() << endl;
     }
 }
 
