@@ -52,6 +52,15 @@ int stl()
     // sort()
     // sort(a.begin(), a.end())で、a[l], a[l+1], ..., a[r-1] を小さい順に並び替えます。
     // sort(a.begin(), a.end(), greater<int>())　で、a[0], a[1], ..., a[N-1] を大きい順に並び替えます。
+    // sort(a.begin(), a.end(), cmp); (aはpairのvector)で，
+    // bool cmp(pair<int,int>&a, pair<int,int>&b){
+        // return a.second < b.second;
+    // }
+    // ってやると，pairのsecondの小さい順に並んでくれる．
+    // また，ラムダ式を用いて，
+    // sort(a.begin(), a.end(), [](pair<int,int>&a, pair<int,int>&b) return {a.second < b.second;});
+    // とやるのもスマート．
+
 
     // vector
     // vectorは、動的な配列を表す型です。
