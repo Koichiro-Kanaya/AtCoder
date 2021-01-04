@@ -12,26 +12,18 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
+ll tribo(int n){
+    if(n <= 2){
+        return max(0, n-1);
+    }
+    return tribo(n-1) + tribo(n-2) + tribo(n-3);
+}
 
 void solve() {
     int n;
     cin >> n;
-    vector<int>a(n);
-    int MAX = -1;
-    int id = -1;
-    for(int i=0;i<n;i++){
-        cin >> a[i];
-        if(chmax(MAX, a[i])){
-            id = i;
-        }
-    }
-    int sec_MAX = -1;
-    for(int i=0;i<n;i++){
-        if(i == id)continue;
-        chmax(sec_MAX, a[i]);
-    }
-    cout << sec_MAX << endl;
-
+    ll ans = tribo(n);
+    cout << ans << endl;
 }
 
 int main() {
