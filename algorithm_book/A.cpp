@@ -12,16 +12,25 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
+vector<ll>vec;
+
 ll tribo(int n){
     if(n <= 2){
-        return max(0, n-1);
+        if(vec[n] != -1){
+            return vec[n];
+        }
+        return vec[n] = max(0, n-1);
     }
-    return tribo(n-1) + tribo(n-2) + tribo(n-3);
+    if(vec[n] != -1){
+        return vec[n];
+    }
+    return vec[n] = tribo(n-1) + tribo(n-2) + tribo(n-3);
 }
 
 void solve() {
     int n;
     cin >> n;
+    vec.assign(n+1,-1);
     ll ans = tribo(n);
     cout << ans << endl;
 }
