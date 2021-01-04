@@ -17,24 +17,22 @@ constexpr double PI = M_PI;
 void solve() {
     int n;
     cin >> n;
-    vector<int>a(n), b(n), c(n);
+    vector<int>a(n), b(n);
     for(int i=0;i<n;i++){
         cin >> a[i];
     }
     for(int i=0;i<n;i++){
         cin >> b[i];
     }
-    for(int i=0;i<n;i++){
-        cin >> c[i];
-    }
-    sort(a.begin(),a.end());
-    sort(b.begin(),b.end());
-    sort(c.begin(),c.end());
+    int tmp = -1;
     int ans = 0;
+    vector<bool>vec(n,false);
     for(int i=0;i<n;i++){
-        auto it1 = lower_bound(c.begin(),c.end(), b[i]+1);
-        auto it2 = lower_bound(a.begin(), a.end(), b[i]);
-        ans += (n - (it1 - c.begin())) * (it2 - a.begin());
+        auto itr = lower_bound(a.begin(), a.end(), b[i]);
+        if(tmp < itr - a.begin()){
+            tmp = itr - a.begin();
+            ans++;
+        }
     }
     cout << ans << endl;
 }
