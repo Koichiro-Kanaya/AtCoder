@@ -14,28 +14,31 @@ constexpr double PI = M_PI;
 
 
 void solve() {
-    int n;
-    cin >> n;
+    int n,w,k;
+    cin >> n >> w >> k;
     vector<int>a(n);
-    int SUM = 0;
     for(int i=0;i<n;i++){
         cin >> a[i];
-        SUM += a[i];
     }
-    vector<bool>dp(SUM+1, false);
-    dp[0] = true;
+    // dp[i][j] i個目の整数までで，重さjにできる最小の個数
+    vector<vector<int>>dp(n+1, vector<int>(w+1, INF));
+    dp[0][0] = 0;
     for(int i=0;i<n;i++){
-        for(int j=dp.size()-1;j>=0;j--){
-            if(j-a[i] >= 0 && dp[j-a[i]]){
-                dp[j] = true;
+        for(int j=0;j<=w;j++){
+            if(dp[i][j] < INF){
+                chmin(dp[i+1][j], dp[i][j]);
+            }
+            if(j-a[i]>=0 && dp[i][j-a[i]] < INF){
+                chmin(dp[i+1][j], dp[i][j-a[i]] + 1);
             }
         }
     }
-    int ans = 0;
-    for(int i=0;i<dp.size();i++){
-        if(dp[i])ans++;
+    if(dp[n][w] <= k){
+        cout << "Yes" << endl;
     }
-    cout << ans << endl;
+    else{
+        cout << "No" << endl;
+    }
 }
 
 int main() {
