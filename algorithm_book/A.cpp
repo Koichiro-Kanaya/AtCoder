@@ -16,32 +16,28 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-bool cmp(pair<int,int>&a, pair<int,int>&b){
-    return a.se < b.se;
-}
-
 void solve() {
-    int n;
-    cin >> n;
-    vector<pair<int,int>>a(n);
-    for(int i=0;i<n;i++){
-        cin >> a[i].fi >> a[i].se;
-    }
-    sort(a.begin(), a.end(), [](pair<int,int>a, pair<int,int>b){
-        return a.second < b.second;});
-    bool flag = true;
-    int tmp = 0;
-    for(int i=0;i<n;i++){
-        if(tmp+a[i].fi > a[i].se){
-            flag = false;
+    string s;
+    cin >> s;
+    stack<int>st;
+    vector<pair<int,int>>vec;
+    for(int i=0;i<s.size();i++){
+        if(s[i] == '('){
+            st.push(i);
         }
-        tmp += a[i].fi;
+        else{
+            if(st.size() == 0){
+                cout << "ERROR" << endl;
+                return;
+            }
+            else{
+                vec.push_back({st.top(), i});
+                st.pop();
+            }
+        }
     }
-    if(flag){
-        cout << "Yes" << endl;
-    }
-    else{
-        cout << "No" << endl;
+    for(int i=0;i<s.size();i++){
+        cout << vec.fi << " " << vec.se << endl;
     }
 }
 
