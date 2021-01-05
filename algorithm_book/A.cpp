@@ -16,29 +16,71 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-void solve() {
-    string s;
-    cin >> s;
-    stack<int>st;
-    vector<pair<int,int>>vec;
-    for(int i=0;i<s.size();i++){
-        if(s[i] == '('){
-            st.push(i);
+struct Heap {
+    vector<int>heap;
+    Heap(){};
+    
+    void push(int x){
+        heap.push_back(x);
+        int index = heap.size() - 1;
+        while(heap[index] > heap[(index-1) / 2] && index > 0){
+            swap(heap[index], heap[(index-1) / 2]);
+            index = (index-1) / 2;
         }
-        else{
-            if(st.size() == 0){
-                cout << "ERROR" << endl;
-                return;
+    }
+
+    int top(){
+        if(heap.size() > 0){
+            return heap[0];
+        }
+        return -1;
+    }
+
+    void pop(){
+        if(heap.size() == 0){
+            cout << "heap is now empty." << endl;
+            return;
+        }
+        swap(heap[0], heap[heap.size()-1]);
+        heap.pop_back();
+        int index = 0;
+        while(true){
+            if(2*index+2 <= heap.size()-1 && heap[index] < max(heap[2*index+1], heap[2*index+2])){
+                if(heap[2*index+1] > heap[2*index+2]){
+                    swap(heap[index], heap[2*index+1]);
+                    index = 2*index+1;
+                }
+                else{
+                    swap(heap[index], heap[2*index+2]);
+                    index = 2*index+2;
+                }
+            }
+            else if (2*index+1 == heap.size()-1 && heap[index] < heap[2*index+1]){
+                swap(heap[index], heap[2*index+1]);
+                break;
             }
             else{
-                vec.push_back({st.top(), i});
-                st.pop();
+                break;
             }
         }
     }
-    for(int i=0;i<s.size();i++){
-        cout << vec[i].fi << " " << vecp[i].se << endl;
-    }
+
+};
+
+void solve() {
+    Heap h;
+    h.push(5);
+    h.push(3);
+    h.push(6);
+    h.push(8);
+    cout << h.top() << endl;
+    h.pop();
+    cout << h.top() << endl;
+    h.pop();
+    cout << h.top() << endl;
+    h.pop();
+    h.pop();
+    h.pop();
 }
 
 signed main() {
