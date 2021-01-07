@@ -16,71 +16,61 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-struct Heap {
-    vector<int>heap;
-    Heap(){};
-    
-    void push(int x){
-        heap.push_back(x);
-        int index = heap.size() - 1;
-        while(heap[index] > heap[(index-1) / 2] && index > 0){
-            swap(heap[index], heap[(index-1) / 2]);
-            index = (index-1) / 2;
-        }
+struct UnionFind {
+    vector<int>par, siz;
+    UnionFind (int n) : par(n, -1), siz(n, 1) {};
+
+    // 自身がrootなら自分の番号を返す
+    int root(int a){
+        if(par[a] == -1) return a;
+        return par[a] = root(par[a]);
     }
 
-    int top(){
-        if(heap.size() > 0){
-            return heap[0];
-        }
-        return -1;
+    bool issame(int a, int b) {
+        return root(a) == root(b);
     }
 
-    void pop(){
-        if(heap.size() == 0){
-            cout << "heap is now empty." << endl;
-            return;
-        }
-        swap(heap[0], heap[heap.size()-1]);
-        heap.pop_back();
-        int index = 0;
-        while(true){
-            if(2*index+2 <= heap.size()-1 && heap[index] < max(heap[2*index+1], heap[2*index+2])){
-                if(heap[2*index+1] > heap[2*index+2]){
-                    swap(heap[index], heap[2*index+1]);
-                    index = 2*index+1;
-                }
-                else{
-                    swap(heap[index], heap[2*index+2]);
-                    index = 2*index+2;
-                }
-            }
-            else if (2*index+1 == heap.size()-1 && heap[index] < heap[2*index+1]){
-                swap(heap[index], heap[2*index+1]);
-                break;
-            }
-            else{
-                break;
-            }
-        }
+    bool unite(int a, int b){
+        int x = root(a);
+        int y = root(b);
+        if(x == y) return false;
+
+        if(siz[x] < siz[y])swap(x, y);
+
+        par[y] = x;
+        siz[x] += siz[y];
+        return true;
     }
 
+    int size(int x){
+        return siz[root(x)];
+    }
 };
 
 void solve() {
-    Heap h;
-    h.push(5);
-    h.push(3);
-    h.push(6);
-    h.push(8);
-    cout << h.top() << endl;
-    h.pop();
-    cout << h.top() << endl;
-    h.pop();
-    cout << h.top() << endl;
-    h.pop();
-    h.pop();
-    h.pop();
+    int n,m;
+    cin >> n >> m;
+    vector<pair<int, int>>a(m);
+    for(int i=0;i<m;i++){
+        int x,y;
+        cin>>x>>y;
+        x--,y--;
+        a[i].fi = x, a[i].se = y;
+    }
+    reverse(a.begin(),a.end());
+    vector<int>ans(m,0);
+    UnionFind uf(n);
+    int cnt = n*(n-1)/2;
+    for(int i=0;i<m;i++){
+        ans[i] = cnt;
+        if(uf.issame(a[i].fi, a[i].se)) continue;
+        cnt -= uf.size(a[i].fi) * uf.size(a[i].se);
+        uf.unite(a[i].fi, a[i].se);
+    }
+    reverse(ans.begin(), ans.end());
+    for(int i=0;i<m;i++){
+        cout << ans[i] << endl;
+    }
 }
 
 signed main() {
