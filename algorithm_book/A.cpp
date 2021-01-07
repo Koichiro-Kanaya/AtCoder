@@ -50,27 +50,33 @@ struct UnionFind {
 void solve() {
     int n,m;
     cin >> n >> m;
+    int ans = 0;
     vector<pair<int, int>>a(m);
     for(int i=0;i<m;i++){
         int x,y;
-        cin>>x>>y;
+        cin >> x >> y;
         x--,y--;
         a[i].fi = x, a[i].se = y;
     }
-    reverse(a.begin(),a.end());
-    vector<int>ans(m,0);
-    UnionFind uf(n);
-    int cnt = n*(n-1)/2;
     for(int i=0;i<m;i++){
-        ans[i] = cnt;
-        if(uf.issame(a[i].fi, a[i].se)) continue;
-        cnt -= uf.size(a[i].fi) * uf.size(a[i].se);
-        uf.unite(a[i].fi, a[i].se);
+        UnionFind uf(n);
+        for(int j=0;j<m;j++){
+            if(i==j)continue;
+            uf.unite(a[j].fi, a[j].se);
+        }
+
+        int cnt = 0;
+        for(int j=0;j<n;j++){
+            if(uf.root(j) == j){
+                cnt++;
+            }
+        }
+        if(cnt > 1){
+            ans++;
+        }
     }
-    reverse(ans.begin(), ans.end());
-    for(int i=0;i<m;i++){
-        cout << ans[i] << endl;
-    }
+    cout << ans << endl;
+
 }
 
 signed main() {
