@@ -13,46 +13,59 @@ constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
 
-vector<int> merge_sort(vector<int>&a){
-    int n = a.size();
-    if(n <= 1){
-        return a;
+void merge_sort(vector<int>&a, int left, int right){
+    // [left, right)
+    if (right - left == 1){
+        return;
+    }
+    int mid = left + (right - left) / 2;
+    merge_sort(a, left, mid); // 左半分をsort
+    merge_sort(a, mid, right); // 右半分をsort
+
+    vector<int>buf;
+    for(int i=left;i<mid;i++){
+        buf.push_back(a[i]);
+    }
+    for(int i=right-1;i>=mid;i--){
+        buf.push_back(a[i]);
     }
 
-    vector<int>left,right;
-    for(int i=0;i<n/2;i++){
-        left.push_back(a[i]);
-    }
-    left = merge_sort(left);
-    for(int i=n/2;i<n;i++){
-        right.push_back(a[i]);
-    }
-    right = merge_sort(right);
-
-    int left_id = 0, right_id = 0;
-    vector<int>vec;
-    while(true){
-        if(left_id == left.size() && right_id == right.size()){
-            break;
-        }
-        else if(left_id == left.size()){
-            vec.push_back(right[right_id]);
-            right_id++;
-        }
-        else if(right_id == right.size()){
-            vec.push_back(left[left_id]);
-            left_id++;
+    int r = buf.size()-1;
+    int l = 0;
+    int index = left;
+    while(r>=l){
+        if(buf[l] <= buf[r]){
+            a[index] = buf[l];
+            l++;
         }
         else{
-            if(left[left_id] < right[right_id]){
-                vec.push_back(left[left_id]);
-                left_id++;
-            }
-            else{
-                vec.push_back(right[right_id]);
-                right_id++;
-            }
+            a[index] = buf[r];
+            r--;
         }
+        index++;
     }
-    return vec;
+}
+
+void solve() {
+    int n;
+    cin >> n;
+    vector<int>a(n);
+    for(int i=0;i<n;i++){
+        cin >> a[i];
+    }
+    merge_sort(a, 0, n);
+    for(int i=0;i<n;i++){
+        cout << a[i] << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout << fixed << setprecision(20);
+
+    solve();
+
+    return 0;
 }
