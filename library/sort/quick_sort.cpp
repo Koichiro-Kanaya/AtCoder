@@ -12,6 +12,7 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
+// in-placeだけど不安定
 void quick_sort(vector<int>&a, int left, int right){
     if(right - left == 1){
         return;
