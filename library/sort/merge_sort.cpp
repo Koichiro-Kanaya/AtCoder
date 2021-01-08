@@ -12,7 +12,8 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-
+// O(N)の外部メモリ(buf)を必要とするので，in-place性を満たさない．
+// マージソートは安定ソートではある．
 void merge_sort(vector<int>&a, int left, int right){
     // [left, right)
     if (right - left == 1){
