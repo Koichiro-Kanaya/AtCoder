@@ -16,11 +16,18 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-void dfs(Graph &G, vector<bool> &seen, int v){
-    seen[v] = true;
-    for(auto nv : G[v]){
-        if(seen[nv] == false){
-            dfs(G, seen, nv);
+void bfs(Graph &G, vector<bool> &seen, int s){
+    queue<int>que;
+    que.push(s);
+    seen[s] = true;
+    while(!que.empty()){
+        int v = que.front();
+        que.pop();
+        seen[v] = true;
+        for(auto nv : G[v]){
+            if(seen[nv] == false){
+                que.push(nv);
+            }
         }
     }
 }
@@ -36,16 +43,17 @@ void solve() {
         G[x].push_back(y);
         G[y].push_back(x);
     }
+    int s,t;
+    s--, t--;
 
-    int ans = 0;
     vector<bool> seen(n, false);
-    for(int i=0;i<n;i++){
-        if(seen[i] == false){
-            dfs(G, seen, i);
-            ans++;
-        }
+    bfs(G, seen, s);
+    if(seen[t]) {
+        cout << "Yes" << endl;
     }
-    cout << ans << endl;
+    else{
+        cout << "No" << endl;
+    }
 }
 
 signed main() {
