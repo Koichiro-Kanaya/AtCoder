@@ -16,28 +16,38 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
+void dfs(Graph &G, vector<int> &dist, int v){
+    for(auto next_v : G[v]){
+        if(dist[next_v] != -1)continue;
+        dist[next_v] = dist[v] + 1;
+        dfs(G, dist, next_v);
+    }
+}
+
 void solve() {
     int n,m;
     cin >> n >> m;
-    vector<pair<int,int>>a(n);
-    for(int i=0;i<n;i++){
-        cin >> a[i].fi >> a[i].se;
+    Graph G(n);
+    int s,t;
+    cin >> s >> t;
+    s--, t--;
+    for(int i=0;i<m;i++){
+        int x,y;
+        cin >> x >> y;
+        x--, y--;
+        G[x].push_back(y);
+        G[y].push_back(x);
     }
-    sort(a.begin(),a.end());
-    int ans = 0;
-    int cnt = 0;
-    for(int i=0;i<n;i++){
-        if(cnt+a[i].se >= m){
-            ans += (m-cnt) * a[i].fi;
-            break;
-        }
-        else{
-            ans += a[i].se * a[i].fi;
-            cnt += a[i].se;
-        }
-    }
-    cout << ans << endl;
 
+    vector<int> dist(n, -1);
+    dist[s] = 0;
+    dfs(G, dist, t);
+    if(dist[t] != -1){
+        cout << "Yes" << endl;
+    }
+    else{
+        cout << "No" << endl;
+    }
 }
 
 signed main() {
