@@ -16,49 +16,51 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-bool ok = true;
-
-void bfs(Graph &G, vector<int> &color, int s){
-    queue<int>que;
-    que.push(s);
-    color[s] = 0;
-    while(!que.empty()){
-        int v = que.front();
-        que.pop();
-        for(auto nv : G[v]){
-            if(color[nv] == -1){
-                que.push(nv);
-                color[nv] = 1 - color[v];
-            }
-            else if(color[nv] == color[v]){
-                ok = false;
-            }
+void dfs(Graph &G, vector<bool> &seen, vector<int> &toposo, int v){
+    seen[v] = true;
+    for(auto nv : G[v]){
+        if(!seen[nv]){
+            dfs(G, seen, toposo, nv);
         }
     }
+    toposo.push_back(v);
 }
 
+// トポロジカルソートして，配るDPで解いた．
 void solve() {
     int n,m;
-    cin >> n >> m;
+    cin>>n>>m;
     Graph G(n);
     for(int i=0;i<m;i++){
         int x,y;
-        cin >> x >> y;
+        cin>>x>>y;
         x--, y--;
         G[x].push_back(y);
-        G[y].push_back(x);
     }
-    int s,t;
-    s--, t--;
 
-    vector<int> color(n, -1);
-    bfs(G, color, s);
-    if(ok) {
-        cout << "Yes" << endl;
+    vector<bool> seen(n, false);
+    vector<int> toposo;
+    for(int i=0;i<n;i++){
+        if(!seen[i]){
+            dfs(G, seen, toposo, i);
+        }
     }
-    else{
-        cout << "No" << endl;
+
+    reverse(toposo.begin(), toposo.end());
+    vector<int>dp(n, -INF);
+    for(int i=0;i<n;i++){
+        if(dp[toposo[i]] == -INF){
+            dp[toposo[i]] = 0;
+        }
+        for(auto nv : G[toposo[i]]){
+            chmax(dp[nv], dp[toposo[i]] + 1);
+        }
     }
+    int ans = 0;
+    for(int i=0;i<n;i++){
+        chmax(ans, dp[i]);
+    }
+    cout << ans << endl;
 }
 
 signed main() {
