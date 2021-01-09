@@ -16,14 +16,13 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-void dfs(Graph &G, vector<bool> &seen, int v, vector<int>&vec){
+void dfs(Graph &G, vector<bool> &seen, int v){
     seen[v] = true;
     for(auto nv : G[v]){
         if(seen[nv] == false){
-            dfs(G, seen, nv, vec);
+            dfs(G, seen, nv);
         }
     }
-    vec.push_back(v);
 }
 
 void solve() {
@@ -38,18 +37,15 @@ void solve() {
         G[y].push_back(x);
     }
 
+    int ans = 0;
     vector<bool> seen(n, false);
-    vector<int>vec;
     for(int i=0;i<n;i++){
         if(seen[i] == false){
-            dfs(G, seen, i, vec);
+            dfs(G, seen, i);
+            ans++;
         }
     }
-    reverse(vec.begin(), vec.end());
-
-    for(int i=0;i<n;i++){
-        cout << vec[i] << endl;
-    }
+    cout << ans << endl;
 }
 
 signed main() {
