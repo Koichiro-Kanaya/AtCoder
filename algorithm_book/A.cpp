@@ -16,21 +16,14 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-bool ng = false;
-
-void dfs(Graph &G, vector<int> &color, int v){
-    for(auto next_v : G[v]){
-        if(color[next_v] == -1){
-            color[next_v] = 1 - color[v];
-            dfs(G, color, next_v);
-        }
-        else if(color[next_v] == color[v]){
-            ng = true;
-        }
-        else{
-            continue;
+void dfs(Graph &G, vector<bool> &seen, int v, vector<int>&vec){
+    seen[v] = true;
+    for(auto nv : G[v]){
+        if(seen[nv] == false){
+            dfs(G, seen, nv, vec);
         }
     }
+    vec.push_back(v);
 }
 
 void solve() {
@@ -45,15 +38,17 @@ void solve() {
         G[y].push_back(x);
     }
 
-    vector<int> color(n, -1);
-    color[0] = 0;
-    dfs(G, color, 0); // 0スタート
-
-    if(!ng){
-        cout << "Yes" << endl;
+    vector<bool> seen(n, false);
+    vector<int>vec;
+    for(int i=0;i<n;i++){
+        if(seen[i] == false){
+            dfs(G, seen, i, vec);
+        }
     }
-    else{
-        cout << "No" << endl;
+    reverse(vec.begin(), vec.end());
+
+    for(int i=0;i<n;i++){
+        cout << vec[i] << endl;
     }
 }
 
