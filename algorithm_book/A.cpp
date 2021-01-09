@@ -16,11 +16,20 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-void dfs(Graph &G, vector<int> &dist, int v){
+bool ng = false;
+
+void dfs(Graph &G, vector<int> &color, int v){
     for(auto next_v : G[v]){
-        if(dist[next_v] != -1)continue;
-        dist[next_v] = dist[v] + 1;
-        dfs(G, dist, next_v);
+        if(color[next_v] == -1){
+            color[next_v] = 1 - color[v];
+            dfs(G, color, next_v);
+        }
+        else if(color[next_v] == color[v]){
+            ng = true;
+        }
+        else{
+            continue;
+        }
     }
 }
 
@@ -28,9 +37,6 @@ void solve() {
     int n,m;
     cin >> n >> m;
     Graph G(n);
-    int s,t;
-    cin >> s >> t;
-    s--, t--;
     for(int i=0;i<m;i++){
         int x,y;
         cin >> x >> y;
@@ -39,10 +45,11 @@ void solve() {
         G[y].push_back(x);
     }
 
-    vector<int> dist(n, -1);
-    dist[s] = 0;
-    dfs(G, dist, t);
-    if(dist[t] != -1){
+    vector<int> color(n, -1);
+    color[0] = 0;
+    dfs(G, color, 0); // 0スタート
+
+    if(!ng){
         cout << "Yes" << endl;
     }
     else{
