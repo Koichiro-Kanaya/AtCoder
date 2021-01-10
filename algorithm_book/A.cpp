@@ -16,51 +16,64 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-void dfs(Graph &G, vector<bool> &seen, vector<int> &toposo, int v){
-    seen[v] = true;
-    for(auto nv : G[v]){
-        if(!seen[nv]){
-            dfs(G, seen, toposo, nv);
-        }
-    }
-    toposo.push_back(v);
-}
+struct UnionFind {
+    vector<int>par, siz;
+    UnionFind(int n) : par(n, -1), siz(n, 1) {};
 
-// トポロジカルソートして，配るDPで解いた．
+    bool issame(int x, int y){
+        return root(x) == root(y);
+    }
+
+    int root(int x){
+        if(par[x] == -1){
+            return x;
+        }
+        return par[x] = root(par[x]);
+    }
+
+    bool unite(int x, int y){
+        x = root(x);
+        y = root(y);
+        if(x == y){
+            return false;
+        }
+        if(size(x) < size(y)){
+            swap(x, y);
+        }
+        par[y] = x;
+        siz[x] += siz[y];
+        return true;
+    }
+
+    int size(int x){
+        return siz[root(x)];
+    }
+
+};
+
 void solve() {
     int n,m;
-    cin>>n>>m;
-    Graph G(n);
+    cin >> n >> m;
+    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> que;
     for(int i=0;i<m;i++){
-        int x,y;
-        cin>>x>>y;
-        x--, y--;
-        G[x].push_back(y);
+        int x,y,z;
+        cin >> x >> y >> z;
+        que.push({z, {min(x, y), max(x, y)}});
     }
-
-    vector<bool> seen(n, false);
-    vector<int> toposo;
-    for(int i=0;i<n;i++){
-        if(!seen[i]){
-            dfs(G, seen, toposo, i);
+    UnionFind uf(n);
+    int cost = 0;
+    while(!que.empty()){
+        int w = que.top().fi;
+        int x = que.top().se.fi;
+        int y = que.top().se.se;
+        que.pop();
+        if(uf.issame(x, y)){
+            continue;
         }
+        uf.unite(x, y);
+        cost += w;
     }
-
-    reverse(toposo.begin(), toposo.end());
-    vector<int>dp(n, -INF);
-    for(int i=0;i<n;i++){
-        if(dp[toposo[i]] == -INF){
-            dp[toposo[i]] = 0;
-        }
-        for(auto nv : G[toposo[i]]){
-            chmax(dp[nv], dp[toposo[i]] + 1);
-        }
-    }
-    int ans = 0;
-    for(int i=0;i<n;i++){
-        chmax(ans, dp[i]);
-    }
-    cout << ans << endl;
+    cout << cost << endl;
 }
 
 signed main() {
