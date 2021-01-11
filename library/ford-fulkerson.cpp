@@ -16,8 +16,7 @@ constexpr long long LINF = 1001001001001001001;
 constexpr double EPS = 1e-10;
 constexpr double PI = M_PI;
 
-// グラフを表す構造体
-struct Graph {
+struct Graph1 {
     // 辺を表す構造体
     // rev : 逆辺(to, from)が，G[to]の中で何番目の要素なのか
     // cap : 辺(from, to)の容量
@@ -31,7 +30,7 @@ struct Graph {
     vector<vector<Edge>> list;
 
     // 頂点数N
-    Graph(int N = 0) : list(N);
+    Graph1(int N = 0) : list(N) {};
 
     // グラフの頂点数取得
     size_t size(){
@@ -74,7 +73,7 @@ struct FordFulkerson {
     // 残余グラフ上でs-tパスを見つける(深さ優先探索)
     // 返り値はs-tパス上の容量の最小値(見つからなかったら0)
     // f : sからvへ到達した過程の各辺の容量の最小値
-    int fodfs(Graph &G, int v, int t, int f){
+    int fodfs(Graph1 &G, int v, int t, int f){
         if(v == t) return f;
 
         // 深さ優先探索
