@@ -14,25 +14,24 @@ constexpr double PI = M_PI;
 
 // in-placeだけど不安定
 void quick_sort(vector<int>&a, int left, int right){
-    if(right - left == 1){
-        return;
-    }
-    int mid = left + (right - left) / 2;
-    int pivot = a[mid];
-    swap(a[mid], a[right - 1]);
-    int i = left, j = left;
-    while(j < right){
-        if(a[j] < pivot){
+    if(right - left <= 1) return;
+
+    int pivot_index = (left + right) / 2; // 適当にここでは中点とする．
+    int pivot = a[pivot_index];
+    swap(a[pivot_index], a[right - 1]); // pivotと右側をswap．
+
+    int i = left; // iは左詰めされたpivotの未満要素の右側を表す．
+    for(int j=left; j<right-1; j++){
+        if(a[i] < pivot){ // pivot未満のものがあったら左に詰めていく．
             swap(a[i], a[j]);
-            i++, j++;
-        }
-        else{
-            j++;
+            i++; // swap(a[i++], a[j]);とも書ける．
         }
     }
-    swap(a[i], a[right - 1]);
-    quick_sort(a, left, mid);
-    quick_sort(a, mid, right);
+    swap(a[i], a[right - 1]); // pivotを適切な場所に挿入．
+
+    // 再帰的に解く．
+    quick_sort(a, left, i); // 左半分(pivot未満)
+    quick_sort(a, i+1, right); // 右半分(pivot以上)
 }
 
 void solve() {
