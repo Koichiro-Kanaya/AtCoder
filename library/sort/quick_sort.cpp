@@ -22,7 +22,7 @@ void quick_sort(vector<int>&a, int left, int right){
 
     int i = left; // iは左詰めされたpivotの未満要素の右側を表す．
     for(int j=left; j<right-1; j++){
-        if(a[i] < pivot){ // pivot未満のものがあったら左に詰めていく．
+        if(a[j] < pivot){ // pivot未満のものがあったら左に詰めていく．
             swap(a[i], a[j]);
             i++; // swap(a[i++], a[j]);とも書ける．
         }
