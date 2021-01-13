@@ -41,6 +41,7 @@ void printList(){
         cout << cur -> name << " -> " << endl;
         cur = cur -> next;
     }
+    cout << endl;
 }
 
 // ノードpの直後にノードvを挿入する．
